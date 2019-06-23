@@ -1,0 +1,33 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+
+#preURL{
+	-fx-background-size: 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+	-fx-background-image: url('../image/leftArrow.png');
+}
+#nextURL{
+	-fx-background-size: 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+	-fx-background-image: url('../image/rightArrow.png');
+}
+#homeURL{
+	-fx-background-size: 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+	-fx-background-image: url('../image/home.png');
+}
+
+#btn_go{  
+    -fx-background-color: #000000;  
+    -fx-text-fill: #FFFFFF  
+}  
+
+.root{  
+    -fx-font-size: 16pt;  
+    /*-fx-base: rgb(255, 145, 47);*/
+    /*-fx-base: orange;*/  
+    -fx-background: rgb(255, 255, 255);  
+}  
