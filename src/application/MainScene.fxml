@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.web.*?>
 <?import javafx.embed.swing.*?>
 <?import javafx.scene.canvas.*?>
@@ -9,32 +10,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="657.0" prefWidth="954.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="744.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <children>
-      <ToolBar layoutX="-1.0" layoutY="1.0" prefHeight="70.0" prefWidth="954.0">
-        <items>
-            <Button fx:id="preURL" mnemonicParsing="false" onAction="#prePage" prefHeight="36.0" prefWidth="36.0" />
-            <Button fx:id="nextURL" mnemonicParsing="false" onAction="#nextPage" prefHeight="36.0" prefWidth="36.0" />
-            <Button fx:id="homeURL" mnemonicParsing="false" onAction="#homePage" prefHeight="36.0" prefWidth="36.0" />
-            
-            <!-- 给TextField 绑定onAction，就可以实现回车自动跳转 -->
-            <TextField fx:id="txtfld_url" onAction="#goToURL" prefHeight="38.0" prefWidth="703.0" promptText="请输入网址：" />
-            <Button fx:id="btn_go" mnemonicParsing="false" onAction="#goToURL" prefHeight="40.0" prefWidth="91.0" text="Go" />
-        </items>
-      </ToolBar>
-      <TabPane layoutX="1.0" layoutY="155.0" prefHeight="823.0" prefWidth="954.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Untitled Tab 1">
-               <content>
-                  <AnchorPane>
-                     <children>
-                        <WebView fx:id="browserPage" prefHeight="673.0" prefWidth="954.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+      <VBox fx:id="vBox" prefHeight="744.0" prefWidth="955.0" spacing="10.0">
+         <children>
+            <HBox fx:id="hBox" prefHeight="38.0" prefWidth="955.0" spacing="5.0">
+               <children>
+                  <Button fx:id="preURL" mnemonicParsing="false" onAction="#prePage" prefHeight="36.0" prefWidth="36.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="nextURL" mnemonicParsing="false" onAction="#nextPage" prefHeight="36.0" prefWidth="36.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="homeURL" mnemonicParsing="false" onAction="#homePage" prefHeight="36.0" prefWidth="36.0" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="txtfld_url" onAction="#goToURL" prefHeight="38.0" promptText="请输入网址：" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btn_go" mnemonicParsing="false" onAction="#goToURL" prefHeight="40.0" prefWidth="75.0" text="Go" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="changeSkinButton" mnemonicParsing="false" onAction="#changeSkin" prefHeight="38.0" text="切换皮肤" HBox.hgrow="NEVER" />
+               </children>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </HBox>
+            <TabPane fx:id="tabPane" prefHeight="589.0" prefWidth="954.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+              <tabs>
+                <Tab text="Untitled Tab 1">
+                     <content>
+                        <AnchorPane fx:id="acPane" prefHeight="690.0" prefWidth="934.0">
+                           <children>
+                              <WebView fx:id="browserPage" prefHeight="723.0" prefWidth="954.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </Tab>
+              </tabs>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </TabPane>
+         </children>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </VBox>
       
    </children>
 </AnchorPane>

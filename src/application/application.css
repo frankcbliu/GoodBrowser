@@ -19,11 +19,14 @@
     -fx-background-position: center;
 	-fx-background-image: url('../image/home.png');
 }
-
+/*
+ * 
 #btn_go{  
-    -fx-background-color: #000000;  
-    -fx-text-fill: #FFFFFF  
+	-fx-background-color: #000000;  
+	-fx-text-fill: #FFFFFF  
 }  
+ */
+
 
 .root{  
     -fx-font-size: 16pt;  

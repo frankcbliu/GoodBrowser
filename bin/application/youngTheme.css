@@ -1,0 +1,14 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+#preURL,#nextURL,#homeURL,#btn_go,#changeSkinButton{
+	-fx-background-color : yellow;
+}
+ 
+
+.root{  
+    -fx-base: orange;  
+    -fx-background: orange;  
+} 
+.tab{
+	-fx-background-color: yellow; 
+}

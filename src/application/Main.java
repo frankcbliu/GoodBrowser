@@ -13,6 +13,7 @@ import javafx.scene.web.WebView;
 
 public class Main extends Application {
 	
+	public static Scene scene;
 	/**
 	 * ³õÊ¼»¯´°¿Ú
 	 */
@@ -21,14 +22,16 @@ public class Main extends Application {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("/application/MainScene.fxml"));
 //			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,954,657);
+			scene = new Scene(root,954,657);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+//			scene.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+			
 //			the code is to open a file
 //			FileChooser fileChooser = new FileChooser();
 //			fileChooser.setTitle("Open Resource File");
 //			fileChooser.showOpenDialog(primaryStage);
-//			primaryStage.setTitle("GoodBrowser");
-
+			
+			primaryStage.setTitle("GoodBrowser");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
