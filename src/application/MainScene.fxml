@@ -30,23 +30,13 @@
                      </HBox.margin>
                   </Button>
                   <Button fx:id="changeSkinButton" mnemonicParsing="false" onAction="#changeSkin" prefHeight="38.0" text="切换皮肤" HBox.hgrow="NEVER" />
+                  <Button fx:id="testButton" mnemonicParsing="false" onAction="#test" prefHeight="45.0" text="Test" HBox.hgrow="NEVER" />
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding>
             </HBox>
-            <TabPane fx:id="tabPane" prefHeight="589.0" prefWidth="954.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-              <tabs>
-                <Tab text="Untitled Tab 1">
-                     <content>
-                        <AnchorPane fx:id="acPane" prefHeight="690.0" prefWidth="934.0">
-                           <children>
-                              <WebView fx:id="browserPage" prefHeight="723.0" prefWidth="954.0" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                </Tab>
-              </tabs>
+            <TabPane fx:id="tabPane" prefHeight="568.0" prefWidth="945.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="5.0" right="5.0" />
                </VBox.margin>
