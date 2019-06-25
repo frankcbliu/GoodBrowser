@@ -28,7 +28,7 @@ public class MyTab extends Tab{
     private static final String CLICK = "click";
 	private MainController controller;
 	private final WebView webView;
-	private static String HOME_URL = "http://www.baidu.com";
+	private static String HOME_URL = MyUtil.HOME_URL;
 	
 	private static List<WebView> views = new ArrayList<>();
 	

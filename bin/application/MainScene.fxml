@@ -29,8 +29,8 @@
                         <Insets />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="changeSkinButton" mnemonicParsing="false" onAction="#changeSkin" prefHeight="38.0" text="切换皮肤" HBox.hgrow="NEVER" />
-                  <Button fx:id="testButton" mnemonicParsing="false" onAction="#test" prefHeight="45.0" text="Test" HBox.hgrow="NEVER" />
+                  <Button fx:id="btn_downloadmanager" mnemonicParsing="false" onAction="#openDownLoadManager" prefHeight="38.0" text="下载管理" HBox.hgrow="NEVER" />
+                  <Button fx:id="btn_setting" mnemonicParsing="false" onAction="#openSetting" prefHeight="45.0" text="设置" HBox.hgrow="NEVER" />
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" />

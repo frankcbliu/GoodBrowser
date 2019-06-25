@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="490.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SettingController">
+   <children>
+      <Label alignment="CENTER" layoutX="69.0" layoutY="53.0" prefHeight="68.0" prefWidth="107.0" text="首页">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <RadioButton fx:id="baidu" layoutX="240.0" layoutY="63.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="百度">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="bing" layoutX="412.0" layoutY="63.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="必应">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="blueColor" layoutX="412.0" layoutY="209.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="蓝色">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="defaultColor" layoutX="240.0" layoutY="209.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" text="默认">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </RadioButton>
+      <Label alignment="CENTER" layoutX="69.0" layoutY="199.0" prefHeight="68.0" prefWidth="107.0" text="颜色">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

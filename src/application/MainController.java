@@ -1,14 +1,21 @@
 package application;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.web.WebHistory.Entry;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,14 +25,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLAnchorElement;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -46,14 +56,14 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 /**
  * controller
- * @author Áõ²Ó±ò
- * @time 2019Äê6ÔÂ23ÈÕ
+ * @author åˆ˜ç¿å½¬
+ * @time 2019å¹´6æœˆ23æ—¥
  */
 public class MainController implements Initializable {
 	private static final String BLANK = "_blank";
     private static final String TARGET = "target";
     private static final String CLICK = "click";
-//	×ÔÊÊÓ¦½çÃæ
+//	è‡ªé€‚åº”ç•Œé¢
 	@FXML
 	private AnchorPane pane;
 	@FXML
@@ -68,91 +78,241 @@ public class MainController implements Initializable {
 	private AnchorPane acPane;
 	
 	
-//	¶¨Òå×é¼ş
+//	å®šä¹‰ç»„ä»¶
 	@FXML
-	private Button btn_go;//ä¯ÀÀ°´Å¥
+	private Button btn_downloadmanager;//ä¸‹è½½ç®¡ç†æŒ‰é’®
 	@FXML
-	private TextField txtfld_url;//urlÎÄ±¾¿ò
+	private Button btn_setting;//æµ‹è¯•ä¸“ç”¨æŒ‰é’®
 	@FXML
-	private Button preURL;//ÉÏÒ»Ò³
+	private Button btn_go;//æµè§ˆæŒ‰é’®
 	@FXML
-	private Button nextURL;//ÏÂÒ»Ò³
+	private TextField txtfld_url;//urlæ–‡æœ¬æ¡†
 	@FXML
-	private Button homeURL;//Ö÷Ò³
+	private Button preURL;//ä¸Šä¸€é¡µ
+	@FXML
+	private Button nextURL;//ä¸‹ä¸€é¡µ
+	@FXML
+	private Button homeURL;//ä¸»é¡µ
 //	@FXML
-//	private WebView browserPage = new WebView();//äÖÈ¾Ò³Ãæ
+//	private WebView browserPage = new WebView();//æ¸²æŸ“é¡µé¢
 	@FXML
-	private Button changeSkinButton;//¸ü»»Æ¤·ô°´Å¥
-	private boolean isYoungTheme = false;//µ±Ç°Æ¤·ô×´Ì¬
+	private Button changeSkinButton;//æ›´æ¢çš®è‚¤æŒ‰é’®
+	private boolean isYoungTheme = false;//å½“å‰çš®è‚¤çŠ¶æ€
 	
 	private WebHistory history;
 	private ObservableList<Entry> his;
 	
 	private WebView browserPage;
 	@FXML
-	private Button testButton;//²âÊÔ×¨ÓÃ°´Å¥
+	private Button testButton;//æµ‹è¯•ä¸“ç”¨æŒ‰é’®
 	
-	private static Stage primaryStage;
+//	private static Stage primaryStage;
 	
 	private Tab currentTab;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		³õÊ¼»¯¿Ø¼ş
+//		åˆå§‹åŒ–æ§ä»¶
+		MyUtil.initSetting();//åˆå§‹åŒ–è®¾ç½®
+		
 //		String url = getClass().getResource("index.html").toExternalForm();
-		homePage();//³õÊ¼»¯Ê×Ò³
-		currentTab = tabPane.getTabs().get(0);//³õÊ¼»¯µ±Ç°±êÇ©
-		tabPane.setTabClosingPolicy(TabClosingPolicy.ALL_TABS);//±êÇ©Ìí¼Ó¹Ø±Õ¹¦ÄÜ
+		homePage();//åˆå§‹åŒ–é¦–é¡µ
+		currentTab = tabPane.getTabs().get(0);//åˆå§‹åŒ–å½“å‰æ ‡ç­¾
+		tabPane.setTabClosingPolicy(TabClosingPolicy.ALL_TABS);//æ ‡ç­¾æ·»åŠ å…³é—­åŠŸèƒ½
 		
-
-		// tabÇĞ»»¼àÌıÆ÷
-		tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-			@Override
-			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-				currentTab = newValue;
-				update(newValue);//¸üĞÂ½çÃæ
-			};
-		});
-		
-		
-		primaryStage = Main.getStage();
-		selfAdaption();//×ÔÊÊÓ¦½çÃæ
-
-		txtfld_url.setOnMouseClicked((event) -> {//ÉèÖÃÈ«Ñ¡url
-            if (txtfld_url.getText().length() == txtfld_url.getCaretPosition()) {
-            	txtfld_url.selectAll();
-            }
-        });
+		tabChangeListener();// tabåˆ‡æ¢ç›‘å¬å™¨
+//		primaryStage = Main.getStage();
+		selfAdaption();//è‡ªé€‚åº”ç•Œé¢
+		setAllSelectedURL();//è®¾ç½®å…¨é€‰url
+//		downloadListener();//æ·»åŠ ä¸‹è½½ç›‘å¬å™¨
+		if (MyUtil.COLOR_MODE.equals("1")) {
+			isYoungTheme = true;
+		}
 	}
-
 	/**
-	 * ²âÊÔº¯Êı
+	 * 
 	 */
-	public void test() {
-		System.out.println("--------------²âÊÔÖĞ----------------");
-		
-		System.out.println("------------------------------------");
+	public void openDownLoadManager() {
+		System.out.println("æ—ä½³æ¬£å¤§å‚»é€¼");
 	}
 	
 	/**
-	 * ¸Ä±ätab±êÇ©£¬ÏàÓ¦¸Ä±äÏÔÊ¾ÄÚÈİ
+	 * æ‰“å¼€è®¾ç½®
+	 */
+	public void openSetting() throws IOException {
+		// åˆ›å»ºæ–°çš„stage
+		Stage settingStage = new Stage();
+        Parent sub = FXMLLoader.load(getClass().getResource("/application/SettingScene.fxml"));
+        Scene secondScene = new Scene(sub, 700, 400);
+        settingStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				// TODO Auto-generated method stub
+				System.out.println("ç›‘å¬çª—å£å…³é—­");
+				if (!isYoungTheme == MyUtil.COLOR_MODE.equals("1") ) {
+					changeSkin();
+				}
+				MyUtil.saveFile(MyUtil.FILE_SETTING_SHOW, MyUtil.INDEX_MODE+" "+MyUtil.COLOR_MODE);
+			}
+		});
+   
+        settingStage.setTitle("è®¾ç½®");
+        settingStage.setScene(secondScene);
+        settingStage.show();
+	}
+	
+	/**
+	 * æ”¹å˜tabæ ‡ç­¾ï¼Œç›¸åº”æ”¹å˜æ˜¾ç¤ºå†…å®¹
 	 * @param newValue
 	 */
 	private void update(Tab newValue) {
 		System.out.println("selected changed");
 		int index = tabPane.getTabs().indexOf(newValue);
 //		System.out.println("index"+index);
-		browserPage = MyTab.getView(index);//¸üĞÂwebview ÄÚÈİ
-		txtfld_url.setText(browserPage.getEngine().getLocation());//¸üĞÂURLµØÖ·
+		browserPage = MyTab.getView(index);//æ›´æ–°webview å†…å®¹
+		txtfld_url.setText(browserPage.getEngine().getLocation());//æ›´æ–°URLåœ°å€
 //		System.out.println("url:"+browserPage.getEngine().getLocation());
-		history = browserPage.getEngine().getHistory();//¸üĞÂÀúÊ·¼ÇÂ¼
-		his = history.getEntries();//¸üĞÂÀúÊ·¼ÇÂ¼
+		history = browserPage.getEngine().getHistory();//æ›´æ–°å†å²è®°å½•
+		his = history.getEntries();//æ›´æ–°å†å²è®°å½•
+		downloadListener();//æ·»åŠ ä¸‹è½½ç›‘å¬å™¨
 	}
-
-	public void setHistory(WebHistory history) {
-		this.history = history;
-	}
+/**************************************************************************
+*
+*							TODO
+*
+***************************************************************************/	
+	
 	/**
-	 *¸üĞÂ±êÇ©Ò³ 
+	 * æ·»åŠ ä¸‹è½½ç›‘å¬å™¨
+	 */
+	private void downloadListener() {
+		browserPage.getEngine().locationProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                File file = new File(System.getProperty("user.home") + "/Downloads/GoodBrowserDownloads/");
+                System.out.println("filepath:"+file.getPath());
+                String[] downloadableExtensions = {".doc", ".xls", ".zip", ".exe", ".rar", ".pdf", ".jar", ".png", ".jpg", ".gif"};
+                for(String downloadAble : downloadableExtensions) {
+                    if (newValue.endsWith(downloadAble)) {
+                        try {
+                            if(!file.exists()) {
+                                file.mkdir();
+                            }
+                            URL url = new URL(browserPage.getEngine().getLocation());
+                            //åŠ è½½æ–‡ä»¶ä¸‹è½½é¡µé¢
+                            browserPage.getEngine().load(MyUtil.FILE_DOWNLOAD_SHOW);
+                            
+                            File download = new File(file + "/" + FilenameUtils.getName(url.getPath()));
+                            System.out.println(download);
+                            if(download.exists()) {
+                            	System.out.println("ä¸‹è½½çš„å†…å®¹å·²å­˜åœ¨ã€‚");
+                                return;
+                            }
+                            System.out.println("å¼€å§‹ä¸‹è½½...");
+                            FileUtils.copyURLToFile(url, download);
+                            System.out.println("Download is completed your download will be in: " + file.getAbsolutePath());
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+	}
+	
+/**************************************************************************
+*
+*							å·²å®Œæˆçš„åŠŸèƒ½
+*
+***************************************************************************/	
+	
+	/**
+	 * æ ‡ç­¾åˆ‡æ¢ç›‘å¬å™¨
+	 */
+	private void tabChangeListener() {
+		tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+				currentTab = newValue;
+				update(newValue);//æ›´æ–°ç•Œé¢
+			};
+		});
+	}
+	
+	/**
+	 * å°è£…åŠ è½½æ–¹æ³•ï¼ŒåŒæ—¶æ›´æ–°åœ°å€æ 
+	 * @param url
+	 */
+	private void load(String url) {
+		browserPage.getEngine().load(dealStr(url));//åŠ è½½url
+		System.out.println("url:"+browserPage.getEngine().getLocation());
+		txtfld_url.setText(browserPage.getEngine().getLocation());//æ›´æ–°urlåœ°å€æ 
+		updateTabName();//æ›´æ–°æ ‡ç­¾å
+	}
+	
+	/**
+	 * è·³è½¬åˆ°æ‰€è¾“å…¥çš„URL
+	 */
+	@FXML
+	public void goToURL() {
+		String targetURL = txtfld_url.getText();
+		if (targetURL.equals("")) {
+			targetURL = "about:blank";
+		}
+		load(targetURL);
+	}
+	
+	/**
+	 * è·³è½¬åˆ°é¦–é¡µ
+	 */
+	@FXML
+	public void homePage() {
+		MyTab homeTab = new MyTab(MyUtil.HOME_URL,this);
+		if (MyUtil.INDEX_MODE.equals("0")) {
+			homeTab.setText("ç™¾åº¦ä¸€ä¸‹");
+		}else if (MyUtil.INDEX_MODE.equals("1")) {
+			homeTab.setText("å¿…åº”");
+		}
+		tabPane.getTabs().add(homeTab);
+		tabPane.getSelectionModel().select(homeTab);
+		update(homeTab);
+	}
+	
+	
+	/**
+	 * è·³è½¬åˆ°ä¸Šä¸€é¡µ
+	 */
+	@FXML
+	public void prePage() {
+		int index = history.getCurrentIndex();
+		if (index == 0) {
+			System.out.println("æ²¡æœ‰ä¸Šä¸€é¡µäº†");
+			return;
+		}
+		if (index>0) {
+			history.go(-1);//ä¸Šä¸€é¡µ
+			txtfld_url.setText(his.get(history.getCurrentIndex()).getUrl());//æ›´æ–°urlåœ°å€æ 
+		}
+	}
+	
+	/**
+	 * è·³è½¬åˆ°ä¸‹ä¸€é¡µ
+	 */
+	@FXML
+	public void nextPage() {
+		int size = history.getEntries().size();
+		int index = history.getCurrentIndex();
+		if (index >= size-1) {
+			System.out.println("æ²¡æœ‰ä¸‹ä¸€é¡µäº†");
+			return;
+		}else{
+			history.go(1);//ä¸‹ä¸€é¡µ
+			txtfld_url.setText(his.get(history.getCurrentIndex()).getUrl());//æ›´æ–°urlåœ°å€æ 
+		}
+	}
+	
+	
+	/**
+	 *æ›´æ–°æ ‡ç­¾é¡µ 
 	 */
 	private void updateTabName() {
 		browserPage.getEngine().documentProperty().addListener((observable, ov, document) -> {
@@ -170,88 +330,40 @@ public class MainController implements Initializable {
             }
         });
 	}
-/**************************************************************************
-*
-*							ÒÑÍê³ÉµÄ¹¦ÄÜ
-*
-***************************************************************************/	
+
 	/**
-	 * ·â×°¼ÓÔØ·½·¨£¬Í¬Ê±¸üĞÂµØÖ·À¸
+	 * æ™ºèƒ½å¤„ç†url
 	 * @param url
+	 * @return
 	 */
-	private void load(String url) {
-		browserPage.getEngine().load(url);//¼ÓÔØurl
-		txtfld_url.setText(url);//¸üĞÂurlµØÖ·À¸
-		updateTabName();//¸üĞÂ±êÇ©Ãû
-	}
-	
-	/**
-	 * Ìø×ªµ½ËùÊäÈëµÄURL
-	 */
-	@FXML
-	public void goToURL() {
-		String targetURL = txtfld_url.getText();
-		if (targetURL.equals("")) {
-			targetURL = "about:blank";
+	private String dealStr(String url) {
+		  String SEARCH = "https://www.baidu.com/s?wd=";
+		  String PROTOCOL = "^(http|ftp|https):\\/\\/\\S*";
+		  String URL_REG_EXP = "((http|ftp|https):\\/\\/)?[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";   
+		Pattern p = Pattern.compile(URL_REG_EXP);
+		if (p.matcher(url).matches()) {
+		    if (!Pattern.compile(PROTOCOL).matcher(url).matches()) {
+		    	url = "http://" + url;
+		    }
+//		    webview.getEngine().load(text);
+		} else if (url != null && !url.trim().isEmpty()) {
+			url = SEARCH + url;
+//		    webview.getEngine().load(SEARCH + text);
 		}
-		load(targetURL);
+		return url;
 	}
 	
 	/**
-	 * Ìø×ªµ½Ê×Ò³
-	 */
-	@FXML
-	public void homePage() {
-		MyTab homeTab = new MyTab(this);
-		homeTab.setText("°Ù¶ÈÒ»ÏÂ");
-		tabPane.getTabs().add(homeTab);
-		tabPane.getSelectionModel().select(homeTab);
-		update(homeTab);
-	}
-	
-	/**
-	 * Ìø×ªµ½ÉÏÒ»Ò³
-	 */
-	@FXML
-	public void prePage() {
-		int index = history.getCurrentIndex();
-		if (index == 0) {
-			System.out.println("Ã»ÓĞÉÏÒ»Ò³ÁË");
-			return;
-		}
-		if (index>0) {
-			history.go(-1);//ÉÏÒ»Ò³
-			txtfld_url.setText(his.get(history.getCurrentIndex()).getUrl());//¸üĞÂurlµØÖ·À¸
-		}
-	}
-	
-	/**
-	 * Ìø×ªµ½ÏÂÒ»Ò³
-	 */
-	@FXML
-	public void nextPage() {
-		int size = history.getEntries().size();
-		int index = history.getCurrentIndex();
-		if (index >= size-1) {
-			System.out.println("Ã»ÓĞÏÂÒ»Ò³ÁË");
-			return;
-		}else{
-			history.go(1);//ÏÂÒ»Ò³
-			txtfld_url.setText(his.get(history.getCurrentIndex()).getUrl());//¸üĞÂurlµØÖ·À¸
-		}
-	}
-	
-	/**
-	 * ×ÔÊÊÓ¦½çÃæ
+	 * è‡ªé€‚åº”ç•Œé¢
 	 */
 	private void selfAdaption() {
-//		¿í¶È×ÔÊÊÓ¦
+//		å®½åº¦è‡ªé€‚åº”
   		vBox.prefWidthProperty().bind(pane.widthProperty());
   		hBox.prefWidthProperty().bind(pane.widthProperty());
   		tabPane.prefWidthProperty().bind(pane.widthProperty());
 //  		acPane.prefWidthProperty().bind(tabPane.widthProperty());
 //  		browserPage.prefWidthProperty().bind(acPane.widthProperty());
-//  		¸ß¶È×ÔÊÊÓ¦
+//  		é«˜åº¦è‡ªé€‚åº”
   		vBox.prefHeightProperty().bind(pane.heightProperty());
 //  		acPane.prefHeightProperty().bind(tabPane.heightProperty());
 //  		browserPage.prefHeightProperty().bind(acPane.heightProperty());
@@ -280,7 +392,7 @@ public class MainController implements Initializable {
 ////		    	  tabPane.setPrefWidth(pane.getWidth());
 ////		    	  acPane.setPrefWidth(tabPane.getWidth());
 ////		  		  browserPage.setPrefWidth(acPane.getWidth());
-////		  		¿í¶È×ÔÊÊÓ¦
+////		  		å®½åº¦è‡ªé€‚åº”
 //		  		vBox.prefWidthProperty().bind(pane.widthProperty());
 //		  		hBox.prefWidthProperty().bind(pane.widthProperty());
 //		  		tabPane.prefWidthProperty().bind(pane.widthProperty());
@@ -289,7 +401,7 @@ public class MainController implements Initializable {
 ////		  		vBox.setPrefHeight(pane.getHeight());
 ////		  		acPane.setPrefHeight(tabPane.getHeight());
 ////		  		browserPage.setPrefHeight(acPane.getHeight());
-////		  		¸ß¶È×ÔÊÊÓ¦
+////		  		é«˜åº¦è‡ªé€‚åº”
 //		  		vBox.prefHeightProperty().bind(pane.heightProperty());
 //		  		acPane.prefHeightProperty().bind(tabPane.heightProperty());
 //		  		browserPage.prefHeightProperty().bind(acPane.heightProperty());
@@ -308,7 +420,7 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * ¸ü»»Æ¤·ô
+	 * æ›´æ¢çš®è‚¤
 	 */
 	public void changeSkin() {
 		isYoungTheme = !isYoungTheme;
@@ -319,5 +431,16 @@ public class MainController implements Initializable {
 		}
 	}
 	
+	/**
+	 * ç‚¹å‡»urlåé¢çš„ç©ºç™½ï¼Œå…¨é€‰url
+	 */
+	private void setAllSelectedURL() {
+		//è®¾ç½®urlç‚¹å‡»äº‹ä»¶
+		txtfld_url.setOnMouseClicked((event) -> {
+            if (txtfld_url.getText().length() == txtfld_url.getCaretPosition()) {
+            	txtfld_url.selectAll();
+            }
+        });
+	}
 	
 }

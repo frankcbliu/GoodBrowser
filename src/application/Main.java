@@ -35,7 +35,9 @@ public class Main extends Application {
 
 			scene = new Scene(root,954,657);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
+			if (MyUtil.COLOR_MODE.equals("1")) {
+				scene.getStylesheets().add(getClass().getResource("youngTheme.css").toExternalForm());
+			}
 //			the code is to open a file
 //			FileChooser fileChooser = new FileChooser();
 //			fileChooser.setTitle("Open Resource File");
